@@ -1,0 +1,16 @@
+Events : 
+	1. new game
+		1)UINewGame()
+			(1)EnsureAnalysisStopped()
+				;g_analyzing && g_backgroundEngine?g_backgroundEngine.terminate(),g_backgroundEngine = null;
+			(2)ResetGame();
+			(3)InitializeBackgroundEngine()?g_backgroundEngine.postMessage("go");
+			(4)RedrawBoard();
+			(5)!g_playerWhite?SearchAndRedraw()
+	2. player moves
+		1)
+		2)
+		3)
+		4)
+		5)
+		6)
