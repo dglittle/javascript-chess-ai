@@ -218,9 +218,11 @@ function SuggestMoves(finishMoveCallback, maxPly, finishPlyCallback) {
         }
 
         if (g_hashTable[g_hashKeyLow & g_hashMask] != null) {
-            bestMoves.push(g_hashTable[g_hashKeyLow & g_hashMask].bestMove);
-			if(bestMoves.length>g_suggest)
-				bestMoves.shift();
+			if(bestMoves.indexOf(g_hashTable[g_hashKeyLow & g_hashMask].bestMove)== -1) {
+				bestMoves.unshift(g_hashTable[g_hashKeyLow & g_hashMask].bestMove);
+				if(bestMoves.length>g_suggest)
+					bestMoves.pop();
+			}
         }
 
         if (finishPlyCallback != null) {
