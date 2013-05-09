@@ -27,6 +27,9 @@ function UINewGame() {
     if (!g_playerWhite) {
         SearchAndRedraw();
     }
+	else {
+		SuggestMoves(UISuggestMoves, 99, null);
+	}
 }
 
 function EnsureAnalysisStopped() {
@@ -91,11 +94,28 @@ function UIChangeTimePerMove() {
     g_timeout = parseInt(timePerMove.value, 10);
 }
 
+function UIChangeTimePerMove() {
+    var numberOfSuggest = document.getElementById("NumberOfSuggest");
+    g_suggest = parseInt(numberOfSuggest.value, 10);
+}
+
 function FinishMove(bestMove, value, timeTaken, ply) {
     if (bestMove != null) {
         UIPlayMove(bestMove, BuildPVMessage(bestMove, value, timeTaken, ply));
     } else {
         alert("Checkmate!");
+    }
+}
+
+function UISuggestMoves(bestMoves, value, timeTaken, ply) {
+	var sugMovTextBox=document.getElementById("SugMovTextBox");
+    if (bestMoves != null) {
+		var text = "";
+		for(i=0;i<bestMoves.length;i++)
+			text+=FormatMove(bestMoves[i])+"  ";
+        sugMovTextBox.value = text;
+    } else {
+        sugMovTextBox.value = "No suggestions";
     }
 }
 
@@ -154,6 +174,13 @@ function SearchAndRedraw() {
         g_backgroundEngine.postMessage("search " + g_timeout);
     } else {
 		Search(FinishMove, 99, null);
+    }
+	
+	//After played by computer, try to suggest moves for human player
+	if (InitializeBackgroundEngine()) {
+        g_backgroundEngine.postMessage("suggest " + g_timeout + " " + g_suggest);
+    } else {
+		SuggestMoves(UISuggestMoves, 99, null);
     }
 }
 
